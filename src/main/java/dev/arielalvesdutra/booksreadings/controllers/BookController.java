@@ -43,7 +43,6 @@ public class BookController {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<Book>> list() {
-		
 		List<Book> booksList = this.bookService.findAll();
 		
 		return  ResponseEntity.ok().body(booksList);		

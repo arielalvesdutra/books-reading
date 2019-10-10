@@ -47,11 +47,6 @@ public class AuthorController {
 		
 		List<Author> authorsList = this.authorService.findAll();
 		
-		for (Author author : authorsList) {
-			
-			System.out.println("lista de livros " + author );
-		}
-		
 		return ResponseEntity.ok().body(authorsList);		
 	}
 	
