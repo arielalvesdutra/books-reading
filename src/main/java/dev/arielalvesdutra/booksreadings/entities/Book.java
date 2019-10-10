@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -23,6 +25,7 @@ public class Book implements Serializable {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotNull
 	private Year publicationYear;
 	
 	@ManyToMany
@@ -32,6 +35,7 @@ public class Book implements Serializable {
 	 inverseJoinColumns = @JoinColumn(name="book_id", referencedColumnName = "id"))
 	private Set<Author> authors = new HashSet<Author>();
 	
+	@NotBlank
 	private String name;
 	
 	public Book() {}

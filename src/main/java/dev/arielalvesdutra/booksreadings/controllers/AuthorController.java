@@ -3,6 +3,8 @@ package dev.arielalvesdutra.booksreadings.controllers;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +25,7 @@ public class AuthorController {
 	private AuthorService authorService;
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Author> create(@RequestBody Author author, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<Author> create(@Valid @RequestBody Author author, UriComponentsBuilder uriBuilder) {
 		
 		Author createdAuthor = this.authorService.create(author);
 		
@@ -59,7 +61,7 @@ public class AuthorController {
 	}
 	
 	@RequestMapping(method = RequestMethod.PUT, value = "/{id}")
-	public ResponseEntity<Author> update(@PathVariable Long id, @RequestBody Author author) {
+	public ResponseEntity<Author> update(@PathVariable Long id, @Valid @RequestBody Author author) {
 
 		Author updatedAuthor = this.authorService.update(id, author);
 		

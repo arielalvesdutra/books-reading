@@ -38,7 +38,6 @@ public class BookService {
 
 	public void updateBookAuthors(Long id, Set<Author> authors) {
 
-		
 		this.bookRespository.updateBookAuthors(id, authors);
 	}
 }

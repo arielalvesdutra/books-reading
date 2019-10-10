@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +28,7 @@ public class BookController {
 	private BookService bookService;
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Book> create(@RequestBody Book book, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<Book> create(@Valid @RequestBody Book book, UriComponentsBuilder uriBuilder) {
 		
 		Book createdBook = this.bookService.create(book);
 		URI uri = uriBuilder.path("/books/{id}")
@@ -60,7 +62,7 @@ public class BookController {
 	}
 	
 	@RequestMapping(method = RequestMethod.PUT, value = "/{id}")
-	public ResponseEntity<Book> update(@PathVariable Long id, @RequestBody Book book) {
+	public ResponseEntity<Book> update(@PathVariable Long id, @Valid @RequestBody Book book) {
 		
 		Book updatedBook = this.bookService.update(id, book);
 		

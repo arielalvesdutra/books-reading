@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -29,8 +31,11 @@ public class Author implements Serializable {
 	 joinColumns = @JoinColumn(name="book_id", referencedColumnName = "id"))
 	private Set<Book> books = new HashSet<Book>();	
 
+	@NotBlank
+	@Pattern(regexp = ".+@.+\\.[a-z]+")
 	private String email;
 	
+	@NotBlank
 	private String name;
 	
 	public Author() {}
