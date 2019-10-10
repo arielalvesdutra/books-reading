@@ -1,56 +1,9 @@
 package dev.arielalvesdutra.booksreadings.repositories;
 
-import java.util.List;
-import java.util.Set;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
-import dev.arielalvesdutra.booksreadings.entities.Author;
 import dev.arielalvesdutra.booksreadings.entities.Book;
 
-@Transactional
-@Repository
-public class BookRepository {
+public interface BookRepository extends JpaRepository<Book, Long> {
 
-	@PersistenceContext
-	private EntityManager em;
-	
-	public Book create(Book book) {
-		this.em.persist(book);
-		return book;
-	}
-
-	public void deleteById(Long id) {
-		Book bookToDelete = this.find(id);
-
-		this.em.remove(bookToDelete);
-	}
-
-	public Book find(Long id) {
-		return this.em.find(Book.class, id); 
-	}
-	
-	public List<Book> findAll() {
-		return this.em.createQuery("select b from Book b", Book.class)
-				.getResultList();
-	}
-
-	public Book update(Long id, Book parameterBook) {
-		Book existingBook =  this.find(id);
-		
-		existingBook.setName(parameterBook.getName());
-		existingBook.setPublicationYear(parameterBook.getPublicationYear());
-		
-		return existingBook;
-	}
-
-	public void updateBookAuthors(Long id, Set<Author> authors) {
-		Book book = this.find(id);
-		
-		book.setAuthors(authors);
-	}
 }

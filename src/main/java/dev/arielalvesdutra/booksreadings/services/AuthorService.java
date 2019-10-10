@@ -15,22 +15,35 @@ public class AuthorService {
 	private AuthorRepository authorRepository;
 	
 	public Author create(Author author) {
-		return this.authorRepository.create(author);
+		return this.authorRepository.save(author);
 	}
 	
 	public void deleteById(Long id) {
-		this.authorRepository.deleteById(id);
+		Author author = this.find(id);
+
+		this.authorRepository.delete(author);
 	}
 
 	public Author find(Long id) {
-		return this.authorRepository.find(id);
+		return this.authorRepository.findById(id).get();
 	}
 
 	public List<Author> findAll() {
 		return this.authorRepository.findAll();
 	}
+	
+	public List<Author> findAllByIds(List<Long> ids) {
+		return this.authorRepository.findAllById(ids);
+	}
 
-	public Author update(Long id, Author author) {
-		return this.authorRepository.update(id, author);
+	public Author update(Long id, Author parameterAuthor) {
+		
+		Author existingAuthor = this.find(id);
+		
+		existingAuthor.setEmail(parameterAuthor.getEmail());
+		existingAuthor.setName(parameterAuthor.getName());
+		this.authorRepository.save(existingAuthor);
+
+		return existingAuthor;
 	}
 }

@@ -3,7 +3,6 @@ package dev.arielalvesdutra.booksreadings.controllers;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import dev.arielalvesdutra.booksreadings.controllers.dto.UpdateBookAuthorsDTO;
 import dev.arielalvesdutra.booksreadings.entities.Author;
 import dev.arielalvesdutra.booksreadings.entities.Book;
 import dev.arielalvesdutra.booksreadings.services.BookService;
@@ -81,9 +81,9 @@ public class BookController {
 	
 	@RequestMapping(method = RequestMethod.PUT, value = "/{id}/authors")
 	public ResponseEntity<?> 
-		updateBookAuthors(@PathVariable Long id, @RequestBody Set<Author> authors) {
-		
-		this.bookService.updateBookAuthors(id, authors);
+		updateBookAuthors(@PathVariable Long id, @RequestBody UpdateBookAuthorsDTO updateBookAuthorsDto) {
+
+		this.bookService.updateBookAuthors(id, updateBookAuthorsDto);
 		
 		return ResponseEntity.ok().build();
 	}
