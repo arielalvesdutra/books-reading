@@ -22,7 +22,6 @@ public class Author implements Serializable {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	// @ManyToMany(mappedBy = "authors")
 	@JsonIgnoreProperties("authors")
 	@ManyToMany
 	@JoinTable(name="author_book",
@@ -70,7 +69,10 @@ public class Author implements Serializable {
 
 	@Override
 	public String toString() {
-		return "[ name: "+ this.getName() +", email: "+ this.getEmail() +"]";
+		return "[ name: "+ this.getName() 
+				+", email: "+ this.getEmail()
+				+", id:"  + this.getId() 
+				+ "]";
 	}
 
 	@Override

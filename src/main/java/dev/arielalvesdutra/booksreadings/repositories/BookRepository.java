@@ -1,6 +1,7 @@
 package dev.arielalvesdutra.booksreadings.repositories;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -8,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import dev.arielalvesdutra.booksreadings.entities.Author;
 import dev.arielalvesdutra.booksreadings.entities.Book;
 
 @Transactional
@@ -41,7 +43,14 @@ public class BookRepository {
 		Book existingBook =  this.find(id);
 		
 		existingBook.setName(parameterBook.getName());
+		existingBook.setPublicationYear(parameterBook.getPublicationYear());
 		
 		return existingBook;
+	}
+
+	public void updateBookAuthors(Long id, Set<Author> authors) {
+		Book book = this.find(id);
+		
+		book.setAuthors(authors);
 	}
 }

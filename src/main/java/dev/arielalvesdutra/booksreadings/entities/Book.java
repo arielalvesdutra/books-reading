@@ -1,6 +1,7 @@
 package dev.arielalvesdutra.booksreadings.entities;
 
 import java.io.Serializable;
+import java.time.Year;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,7 +22,9 @@ public class Book implements Serializable {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+	
+	private Year publicationYear;
+	
 	@ManyToMany
 	@JsonIgnoreProperties("books")
 	@JoinTable(name="author_book",
@@ -57,10 +60,19 @@ public class Book implements Serializable {
 		this.authors = authors;
 	}
 	
+	public Year getPublicationYear() {
+		return publicationYear;
+	}
+
+	public void setPublicationYear(Year publicationYear) {
+		this.publicationYear = publicationYear;
+	}
+	
 	@Override
 	public String toString() {
 		return "[ name: "+ this.getName() 
 		+ ", authors: " + this.getAuthors()
+		+ ", year: " + this.getPublicationYear()
 		+ "]";
 	}
 
