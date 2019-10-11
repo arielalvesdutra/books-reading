@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import dev.arielalvesdutra.booksreadings.entities.Author;
@@ -25,13 +27,13 @@ public class AuthorService {
 	public Author create(Author author) {
 		
 		if (author.hasBooks()) {
-			author = this.withValidatedBooks(author);
+			author = this.authorWithValidatedBooks(author);
 		}
 		
 		return this.authorRepository.save(author);
 	}
 	
-	private Author withValidatedBooks(Author parameterAuthor) {
+	private Author authorWithValidatedBooks(Author parameterAuthor) {
 		try {
 			Set<Book> validatedBooks = new HashSet<Book>();
 			Author author = parameterAuthor.clone();
@@ -65,6 +67,13 @@ public class AuthorService {
 	public List<Author> findAll() {
 		return this.authorRepository.findAll();
 	}
+
+	public List<Author> findAll(String name) {
+		Example<Author> authorExample 
+									= this.getExampleToFindContaingNameCaseInsensitive(name);
+
+		return this.authorRepository.findAll(authorExample);
+	}
 	
 	public List<Author> findAllByIds(List<Long> ids) {
 		List<Author> authors = new ArrayList<Author>();
@@ -85,5 +94,16 @@ public class AuthorService {
 		this.authorRepository.save(existingAuthor);
 
 		return existingAuthor;
+	}
+
+	private Example<Author> getExampleToFindContaingNameCaseInsensitive(String name) {
+		Author author = new Author();
+		author.setName(name);
+		Example<Author> authorExample = Example.of(author, 
+								ExampleMatcher.matchingAny()
+															.withIgnoreCase()
+															.withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
+
+		return authorExample;
 	}
 }

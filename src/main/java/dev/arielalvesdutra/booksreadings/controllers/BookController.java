@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -47,8 +48,9 @@ public class BookController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<List<Book>> list() {
-		List<Book> booksList = this.bookService.findAll();
+	public ResponseEntity<List<Book>> list(@RequestParam(required = false) String name) {
+
+		List<Book> booksList = this.bookService.findAll(name);
 		
 		return  ResponseEntity.ok().body(booksList);		
 	}

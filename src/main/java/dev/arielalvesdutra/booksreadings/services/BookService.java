@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import dev.arielalvesdutra.booksreadings.controllers.dto.UpdateBookAuthorsDTO;
@@ -48,6 +50,12 @@ public class BookService {
 		return this.bookRepository.findAll();
 	}
 
+	public List<Book> findAll(String name) {
+		Example<Book> bookExample = this.getExampleToFindContaingNameCaseInsensitive(name);
+
+		return this.bookRepository.findAll(bookExample);
+	}
+
 	public Book update(Long id, Book parameterBook) {
 		Book existingBook = this.find(id);
 		
@@ -85,5 +93,16 @@ public class BookService {
 		} catch (CloneNotSupportedException e) {		
 			throw new RuntimeException(e.getMessage());
 		}
+	}
+
+	private Example<Book> getExampleToFindContaingNameCaseInsensitive(String name) {
+		Book book = new Book();
+		book.setName(name);
+		Example<Book> bookExample = Example.of(book, 
+								ExampleMatcher.matchingAny()
+															.withIgnoreCase()
+															.withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
+
+		return bookExample;
 	}
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -45,9 +46,9 @@ public class AuthorController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<List<Author>> list() {
+	public ResponseEntity<List<Author>> list(@RequestParam(required = false) String name) {
 		
-		List<Author> authorsList = this.authorService.findAll();
+		List<Author> authorsList = this.authorService.findAll(name);
 		
 		return ResponseEntity.ok().body(authorsList);		
 	}
