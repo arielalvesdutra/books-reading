@@ -81,7 +81,7 @@ public class BookController {
 	
 	@RequestMapping(method = RequestMethod.PUT, value = "/{id}/authors")
 	public ResponseEntity<?> 
-		updateBookAuthors(@PathVariable Long id, @RequestBody UpdateBookAuthorsDTO updateBookAuthorsDto) {
+			updateBookAuthors(@PathVariable Long id, @RequestBody UpdateBookAuthorsDTO updateBookAuthorsDto) {
 
 		this.bookService.updateBookAuthors(id, updateBookAuthorsDto);
 		

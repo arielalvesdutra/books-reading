@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-public class Book implements Serializable {
+public class Book implements Serializable, Cloneable {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -103,5 +103,18 @@ public class Book implements Serializable {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+	
+	public Boolean hasAuthors() {
+		if (this.getAuthors().isEmpty()) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	@Override
+	public Book clone() throws CloneNotSupportedException {
+		return (Book)super.clone();
 	}
 }
