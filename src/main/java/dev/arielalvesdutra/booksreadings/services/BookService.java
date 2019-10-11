@@ -7,6 +7,8 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import dev.arielalvesdutra.booksreadings.controllers.dto.UpdateBookAuthorsDTO;
@@ -56,6 +58,14 @@ public class BookService {
 		return this.bookRepository.findAll(bookExample);
 	}
 
+	public Page<Book> findAll(String name, Pageable pagination) {
+		Example<Book> bookExample = this.getExampleToFindContaingNameCaseInsensitive(name);
+
+		Page<Book> bookPage = this.bookRepository.findAll(bookExample, pagination);
+
+		return bookPage;
+	}
+
 	public Book update(Long id, Book parameterBook) {
 		Book existingBook = this.find(id);
 		
@@ -77,7 +87,7 @@ public class BookService {
 		this.bookRepository.save(book);
 	}
 	
-	public Book bookWithValidatedAuthors(Book parameterBook) throws EntityNotFoundException {
+	private Book bookWithValidatedAuthors(Book parameterBook) throws EntityNotFoundException {
 		try {
 			Set<Author> validatedAuthors = new HashSet<Author>();
 			Book book = parameterBook.clone();

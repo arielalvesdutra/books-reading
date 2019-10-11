@@ -8,6 +8,8 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import dev.arielalvesdutra.booksreadings.entities.Author;
@@ -32,24 +34,6 @@ public class AuthorService {
 		
 		return this.authorRepository.save(author);
 	}
-	
-	private Author authorWithValidatedBooks(Author parameterAuthor) {
-		try {
-			Set<Book> validatedBooks = new HashSet<Book>();
-			Author author = parameterAuthor.clone();
-			
-			for (Book book: author.getBooks()) {
-				validatedBooks.add(this.bookService.find(book.getId()));
-			}
-			
-			author.setBooks(validatedBooks);
-			
-			return author;
-			
-		} catch (CloneNotSupportedException e) {		
-			throw new RuntimeException(e.getMessage());
-		}		
-	}
 
 	public void deleteById(Long id) {
 		Author author = this.find(id);
@@ -70,10 +54,17 @@ public class AuthorService {
 
 	public List<Author> findAll(String name) {
 		Example<Author> authorExample 
-									= this.getExampleToFindContaingNameCaseInsensitive(name);
+		                  = this.getExampleToFindContaingNameCaseInsensitive(name);
 
 		return this.authorRepository.findAll(authorExample);
 	}
+
+	public Page<Author> findAll(String name, Pageable pagination) {
+		Example<Author> authorExample 
+		                  = this.getExampleToFindContaingNameCaseInsensitive(name);
+
+		return this.authorRepository.findAll(authorExample, pagination);
+	}	
 	
 	public List<Author> findAllByIds(List<Long> ids) {
 		List<Author> authors = new ArrayList<Author>();
@@ -105,5 +96,23 @@ public class AuthorService {
 															.withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
 
 		return authorExample;
+	}
+
+	private Author authorWithValidatedBooks(Author parameterAuthor) {
+		try {
+			Set<Book> validatedBooks = new HashSet<Book>();
+			Author author = parameterAuthor.clone();
+			
+			for (Book book: author.getBooks()) {
+				validatedBooks.add(this.bookService.find(book.getId()));
+			}
+			
+			author.setBooks(validatedBooks);
+			
+			return author;
+			
+		} catch (CloneNotSupportedException e) {		
+			throw new RuntimeException(e.getMessage());
+		}		
 	}
 }

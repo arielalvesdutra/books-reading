@@ -1,11 +1,13 @@
 package dev.arielalvesdutra.booksreadings.controllers;
 
 import java.net.URI;
-import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,9 +48,10 @@ public class AuthorController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<List<Author>> list(@RequestParam(required = false) String name) {
+	public ResponseEntity<Page<Author>> list(@RequestParam(required = false) String name,
+					@PageableDefault(sort="name", page = 0, size = 10) Pageable pagination) {
 		
-		List<Author> authorsList = this.authorService.findAll(name);
+		Page<Author> authorsList = this.authorService.findAll(name, pagination);
 		
 		return ResponseEntity.ok().body(authorsList);		
 	}
