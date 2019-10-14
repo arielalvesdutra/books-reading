@@ -1,4 +1,4 @@
-package dev.arielalvesdutra.booksreadings.config.security;
+package dev.arielalvesdutra.booksreadings.services;
 
 import java.util.Date;
 

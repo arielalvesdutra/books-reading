@@ -13,32 +13,29 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.arielalvesdutra.booksreadings.config.security.TokenService;
 import dev.arielalvesdutra.booksreadings.controllers.dto.LoginFormDTO;
 import dev.arielalvesdutra.booksreadings.controllers.dto.TokenDTO;
+import dev.arielalvesdutra.booksreadings.services.TokenService;
 
 @RequestMapping("auth")
 @RestController
 public class AuthController {
-	
+
 	@Autowired
 	private AuthenticationManager authManager;
-	
+
 	@Autowired
 	private TokenService tokenService;
-	
+
 	@PostMapping
-	public ResponseEntity<TokenDTO> auth(@RequestBody @Valid LoginFormDTO formDto) {
+	public ResponseEntity<TokenDTO> auth(@RequestBody @Valid LoginFormDTO formDto) 
+			throws AuthenticationException {
+		
 		UsernamePasswordAuthenticationToken loginData = 
 				formDto.toUsernamePasswordAuthenticationToken();
-		try {
-			Authentication authentication = this.authManager.authenticate(loginData);
-			String token = tokenService.generateToken(authentication);
-			
-			return ResponseEntity.ok(new TokenDTO(token));
-			
-		} catch(AuthenticationException e) {
-			return ResponseEntity.badRequest().build();
-		}
+		Authentication authentication = this.authManager.authenticate(loginData);
+		String token = tokenService.generateToken(authentication);
+
+		return ResponseEntity.ok(new TokenDTO(token));
 	}
 }

@@ -13,6 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import dev.arielalvesdutra.booksreadings.entities.User;
 import dev.arielalvesdutra.booksreadings.repositories.UserRepository;
+import dev.arielalvesdutra.booksreadings.services.TokenService;
 
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 	
@@ -55,15 +56,18 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 	public String retrieveToken(HttpServletRequest request) {
 		String token = request.getHeader("Authorization");
 		
-		if (!this.isValidRequestTokenFormat(token)) {
+		if (!this.isValidRequestTokenHeaderFormat(token)) {
 			return null;
 		}
 		
 		return token.substring(7, token.length());
 	}
 	
-	private Boolean isValidRequestTokenFormat(String token) {
-		return !(token == null || token.isEmpty() || !token.startsWith("Bearer "));
+	private Boolean isValidRequestTokenHeaderFormat(String token) {
+		if (token == null || token.isEmpty() || !token.startsWith("Bearer ")) {
+			return false;
+		}
+		return true;
 	}
 
 }

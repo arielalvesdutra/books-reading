@@ -14,6 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import dev.arielalvesdutra.booksreadings.repositories.UserRepository;
+import dev.arielalvesdutra.booksreadings.services.AuthenticationService;
+import dev.arielalvesdutra.booksreadings.services.TokenService;
 
 @EnableWebSecurity
 @Configuration
