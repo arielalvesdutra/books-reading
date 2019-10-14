@@ -29,7 +29,6 @@ public class Author implements Serializable, Cloneable {
 	
 	@NotBlank
 	@Pattern(regexp = ".+@.+\\.[a-z]+")
-	
 	private String email;
 	
 	@JsonIgnoreProperties("authors")

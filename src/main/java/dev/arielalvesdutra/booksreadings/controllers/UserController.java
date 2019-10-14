@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import dev.arielalvesdutra.booksreadings.controllers.dto.CreateUserDTO;
 import dev.arielalvesdutra.booksreadings.controllers.dto.UserDTO;
 import dev.arielalvesdutra.booksreadings.entities.User;
 import dev.arielalvesdutra.booksreadings.services.UserService;
@@ -27,9 +28,9 @@ public class UserController {
 	private UserService userService;
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<UserDTO> create(@Valid @RequestBody User user, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<UserDTO> create(@Valid @RequestBody CreateUserDTO parameterUser, UriComponentsBuilder uriBuilder) {
 		
-		User createduser = this.userService.create(user);
+		User createduser = this.userService.create(parameterUser.toUser());
 		URI uri = uriBuilder.path("/users/{id}")
 				.buildAndExpand(createduser.getId())
 				.toUri();

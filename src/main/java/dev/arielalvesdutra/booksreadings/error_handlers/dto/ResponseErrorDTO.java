@@ -1,8 +1,10 @@
 package dev.arielalvesdutra.booksreadings.error_handlers.dto;
 
 import java.time.Instant;
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public class ResponseErrorDTO {
 	
@@ -11,6 +13,7 @@ public class ResponseErrorDTO {
 	private final Integer status;
 	private final String path;
 	private final Instant timestamp;
+	private final List<?> errors;
 	
 	public ResponseErrorDTO(
 			String error, String message, Integer status, 
@@ -21,13 +24,16 @@ public class ResponseErrorDTO {
 		this.path = path;
 		this.status = status;
 		this.timestamp = timestamp;
+		this.errors = new ArrayList<>();
 	}
 	
     public ResponseErrorDTO(Integer status, Map<String, Object> errorAttributes) {
+    	
         this.status = status;
     	this.error = (String) errorAttributes.get("error");
 		this.message = (String) errorAttributes.get("message");
 		this.path = (String) errorAttributes.get("path");
+		this.errors = (List<?>) errorAttributes.get("errors");
 		
 		Date dateTimestamp = (Date) errorAttributes.get("timestamp");	
 		this.timestamp = dateTimestamp.toInstant();	
@@ -51,5 +57,9 @@ public class ResponseErrorDTO {
 	
 	public Instant getTimestamp() {
 		return this.timestamp;
+	}
+	
+	public List<?> getErrors() {
+		return this.errors;
 	}
 }
