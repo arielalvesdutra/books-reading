@@ -25,6 +25,9 @@ public class Book implements Serializable, Cloneable {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotBlank
+	private String name;
+	
 	@NotNull
 	private Year publicationYear;
 	
@@ -34,9 +37,6 @@ public class Book implements Serializable, Cloneable {
 	 joinColumns = @JoinColumn(name="author_id", referencedColumnName= "id"),
 	 inverseJoinColumns = @JoinColumn(name="book_id", referencedColumnName = "id"))
 	private Set<Author> authors = new HashSet<Author>();
-	
-	@NotBlank
-	private String name;
 	
 	public Book() {}
 

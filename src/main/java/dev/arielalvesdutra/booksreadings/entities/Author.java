@@ -24,6 +24,14 @@ public class Author implements Serializable, Cloneable {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@NotBlank
+	private String name;
+	
+	@NotBlank
+	@Pattern(regexp = ".+@.+\\.[a-z]+")
+	
+	private String email;
+	
 	@JsonIgnoreProperties("authors")
 	@ManyToMany
 	@JoinTable(name="author_book",
@@ -31,13 +39,6 @@ public class Author implements Serializable, Cloneable {
 	 joinColumns = @JoinColumn(name="book_id", referencedColumnName = "id"))
 	private Set<Book> books = new HashSet<Book>();	
 
-	@NotBlank
-	@Pattern(regexp = ".+@.+\\.[a-z]+")
-	private String email;
-	
-	@NotBlank
-	private String name;
-	
 	public Author() {}
 
 	public Long getId() {
