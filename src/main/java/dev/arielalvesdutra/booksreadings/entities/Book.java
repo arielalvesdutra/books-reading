@@ -5,6 +5,7 @@ import java.time.Year;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,9 +13,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -37,8 +40,20 @@ public class Book implements Serializable, Cloneable {
 	 joinColumns = @JoinColumn(name="author_id", referencedColumnName= "id"),
 	 inverseJoinColumns = @JoinColumn(name="book_id", referencedColumnName = "id"))
 	private Set<Author> authors = new HashSet<Author>();
+
+	@OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<BookRead> booksReadings = new HashSet<BookRead>();
 	
 	public Book() {}
+
+	@JsonIgnore
+	public Set<BookRead> getBooksReadings() {
+		return this.booksReadings;
+	}
+
+	public void setBooksReadings(Set<BookRead> readings) {
+		this.booksReadings = readings;
+	}
 
 	public Long getId() {
 		return id;
@@ -74,10 +89,11 @@ public class Book implements Serializable, Cloneable {
 	
 	@Override
 	public String toString() {
-		return "[ name: "+ this.getName() 
-		+ ", authors: " + this.getAuthors()
-		+ ", year: " + this.getPublicationYear()
-		+ "]";
+		return "[ id: " + this.getId()
+				+ ", name: "+ this.getName()
+				+ ", authors: " + this.getAuthors()
+				+ ", year: " + this.getPublicationYear()
+				+ "]";
 	}
 
 	@Override

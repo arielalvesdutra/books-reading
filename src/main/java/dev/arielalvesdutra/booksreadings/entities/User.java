@@ -2,8 +2,11 @@ package dev.arielalvesdutra.booksreadings.entities;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +14,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,6 +38,27 @@ public class User implements UserDetails {
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Profile> profiles = new ArrayList<Profile>();
+
+	@JsonIgnoreProperties("user")
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL,  orphanRemoval = true)
+	private Set<BookRead> booksReadings = new HashSet<BookRead>();
+	
+	public Set<BookRead> getBooksReadings() {
+		return this.booksReadings;
+	}
+
+	public void setBooksReadings(Set<BookRead> booksReading) {
+		this.booksReadings = booksReading;
+	}
+
+	public void addBookRead(BookRead bookRead) {
+		bookRead.setUser(this);
+		this.booksReadings.add(bookRead);
+	}
+
+	public void removeBookRead(BookRead bookRead) {
+		this.booksReadings.remove(bookRead);
+	}
 
 	public String getName() {
 		return name;
@@ -127,5 +154,12 @@ public class User implements UserDetails {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+	
+	@Override
+	public String toString() {
+	return "[ id: " + this.getId() 
+				+ ", name: " + this.getName() 
+				+ ", bookReads:" + this.getBooksReadings() + "]";
 	}
 }
