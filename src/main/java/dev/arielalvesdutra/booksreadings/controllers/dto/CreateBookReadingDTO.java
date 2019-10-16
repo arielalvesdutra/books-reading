@@ -1,11 +1,11 @@
 package dev.arielalvesdutra.booksreadings.controllers.dto;
 
-public class CreateBookReadDTO {
+public class CreateBookReadingDTO {
   private Long bookId;
 
-  public CreateBookReadDTO() {}
+  public CreateBookReadingDTO() {}
 
-  public CreateBookReadDTO(Long bookId) {
+  public CreateBookReadingDTO(Long bookId) {
     this.bookId = bookId;
   }
 

@@ -5,7 +5,7 @@ import java.util.Set;
 
 import org.springframework.data.domain.Page;
 
-import dev.arielalvesdutra.booksreadings.entities.BookRead;
+import dev.arielalvesdutra.booksreadings.entities.BookReading;
 import dev.arielalvesdutra.booksreadings.entities.User;
 
 public class UserDTO {
@@ -13,7 +13,7 @@ public class UserDTO {
 	private Long id;
 	private String name;
 	private String email;
-	private Set<BookRead> booksReadings = new HashSet<BookRead>();
+	private Set<BookReading> booksReadings = new HashSet<BookReading>();
 	
 	public UserDTO(User user) {
 		this.name = user.getName();
@@ -34,7 +34,7 @@ public class UserDTO {
 		return this.name;
 	}
 
-	public Set<BookRead> getBooksReadings() {
+	public Set<BookReading> getBooksReadings() {
 		return this.booksReadings;
 	}
 	

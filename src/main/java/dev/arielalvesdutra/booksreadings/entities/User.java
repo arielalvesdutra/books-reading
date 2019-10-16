@@ -41,23 +41,23 @@ public class User implements UserDetails {
 
 	@JsonIgnoreProperties("user")
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL,  orphanRemoval = true)
-	private Set<BookRead> booksReadings = new HashSet<BookRead>();
+	private Set<BookReading> booksReadings = new HashSet<BookReading>();
 	
-	public Set<BookRead> getBooksReadings() {
+	public Set<BookReading> getBooksReadings() {
 		return this.booksReadings;
 	}
 
-	public void setBooksReadings(Set<BookRead> booksReading) {
+	public void setBooksReadings(Set<BookReading> booksReading) {
 		this.booksReadings = booksReading;
 	}
 
-	public void addBookRead(BookRead bookRead) {
-		bookRead.setUser(this);
-		this.booksReadings.add(bookRead);
+	public void addBookReading(BookReading booksReading) {
+		booksReading.setUser(this);
+		this.booksReadings.add(booksReading);
 	}
 
-	public void removeBookRead(BookRead bookRead) {
-		this.booksReadings.remove(bookRead);
+	public void removeBookReading(BookReading booksReading) {
+		this.booksReadings.remove(booksReading);
 	}
 
 	public String getName() {

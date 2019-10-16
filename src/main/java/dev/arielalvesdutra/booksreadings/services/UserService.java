@@ -9,10 +9,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import dev.arielalvesdutra.booksreadings.entities.Book;
-import dev.arielalvesdutra.booksreadings.entities.BookRead;
+import dev.arielalvesdutra.booksreadings.entities.BookReading;
 import dev.arielalvesdutra.booksreadings.entities.User;
+import dev.arielalvesdutra.booksreadings.entities.enums.ReadingStatus;
 import dev.arielalvesdutra.booksreadings.exceptions.EntityNotFoundException;
-import dev.arielalvesdutra.booksreadings.repositories.BookReadRepository;
+import dev.arielalvesdutra.booksreadings.repositories.BookReadingRepository;
 import dev.arielalvesdutra.booksreadings.repositories.UserRepository;
 
 @Service
@@ -25,7 +26,7 @@ public class UserService {
 	private UserRepository userRepository;
 
 	@Autowired
-	private BookReadRepository bookReadRepository;
+	private BookReadingRepository bookReadingRepository;
 	
 	public User create(User user) {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -50,41 +51,64 @@ public class UserService {
 		return this.userRepository.findAll(pagination);
 	}
 
-	public User addBookRead(Long id, BookRead bookRead) {
+
+	public User addBookReading(Long id, BookReading bookReading) {
 		User user = this.find(id);
 		
-		user.addBookRead(bookRead);
+		user.addBookReading(bookReading);
 		this.userRepository.save(user);
 		
 		return user;
 	}
 
-	public User addBookRead(Long id, Long bookId) {
+	public User addBookReading(Long id, Long bookId) {
 		Book book = this.bookService.find(bookId);
-		BookRead bookRead = new BookRead(book);
+		BookReading bookReading = new BookReading(book);
 
-		User user = this.addBookRead(id, bookRead);
+		User user = this.addBookReading(id, bookReading);
 
 		return user;
 	}
 
-	public User removeBookRead(Long id, BookRead bookRead) {
+	public User removeBookReading(Long id, BookReading bookReading) {
 		User user = this.find(id);
 		
-		user.removeBookRead(bookRead);
+		user.removeBookReading(bookReading);
 		this.userRepository.save(user);
 		
 		return user;
 	}
 
-	public User removeBookRead(Long userId, Long bookReadId) {
-		BookRead bookRead = this.bookReadRepository
-							.findById(bookReadId)
+	public User removeBookReading(Long userId, Long bookReadingId) {
+		BookReading bookReading = this.bookReadingRepository
+							.findById(bookReadingId)
 							.orElseThrow(() -> 	
-							new EntityNotFoundException("Leitura com ID "+ bookReadId +" não encontrada"));
+							new EntityNotFoundException("Leitura com ID "+ bookReadingId +" não encontrada"));
 		
-		User user = this.removeBookRead(userId, bookRead);
+		User user = this.removeBookReading(userId, bookReading);
 
 		return user;
+	}
+
+	public BookReading updateBookReadingStatus(Long userId, Long bookReadingId, ReadingStatus readingStatus) {
+		BookReading bookReading = this.findBookReading(userId, bookReadingId);
+
+		bookReading.setReadingStatus(readingStatus);
+		this.bookReadingRepository.save(bookReading);
+		
+		return bookReading;
+	}
+	
+	private BookReading findBookReading(Long userId, Long bookReadingId) {
+		BookReading bookReading = 
+			this.bookReadingRepository.findByIdAndUser_Id(bookReadingId, userId);
+
+		if (bookReading == null) {
+			throw new EntityNotFoundException("Leitura de ID " 
+							+ bookReadingId + " do usuário de ID "
+							+ userId + " Não encontrada");
+		}
+
+		return bookReading;
 	}
 }

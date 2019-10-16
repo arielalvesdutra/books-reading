@@ -42,16 +42,16 @@ public class Book implements Serializable, Cloneable {
 	private Set<Author> authors = new HashSet<Author>();
 
 	@OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<BookRead> booksReadings = new HashSet<BookRead>();
+	private Set<BookReading> booksReadings = new HashSet<BookReading>();
 	
 	public Book() {}
 
 	@JsonIgnore
-	public Set<BookRead> getBooksReadings() {
+	public Set<BookReading> getBooksReadings() {
 		return this.booksReadings;
 	}
 
-	public void setBooksReadings(Set<BookRead> readings) {
+	public void setBooksReadings(Set<BookReading> readings) {
 		this.booksReadings = readings;
 	}
 

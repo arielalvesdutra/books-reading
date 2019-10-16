@@ -3,6 +3,8 @@ package dev.arielalvesdutra.booksreadings.entities;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -11,8 +13,10 @@ import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import dev.arielalvesdutra.booksreadings.entities.enums.ReadingStatus;
+
 @Entity
-public class BookRead implements Serializable {
+public class BookReading implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -28,10 +32,21 @@ public class BookRead implements Serializable {
 	@ManyToOne
 	private User user;
 
-	public BookRead() {}
+	@Enumerated(EnumType.STRING)
+	private ReadingStatus readingStatus = ReadingStatus.RESERVED;
 
-	public BookRead(Book book) {
+	public BookReading() {}
+
+	public BookReading(Book book) {
 		this.book =  book;
+	}
+	
+	public ReadingStatus getReadingStatus() {
+		return readingStatus;
+	}
+
+	public void setReadingStatus(ReadingStatus readingStatus) {
+		this.readingStatus = readingStatus;
 	}
 
 	public User getUser() {
@@ -60,7 +75,9 @@ public class BookRead implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "[ id: " + this.getId() + "]";
+		return "[ id: " + this.getId() 
+						+ ", status: " + this.getReadingStatus()
+						+ ", bookName: " + this.getBook().getName() +"]";
 	}
 
 	@Override
@@ -80,7 +97,7 @@ public class BookRead implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		BookRead other = (BookRead) obj;
+		BookReading other = (BookReading) obj;
 		if (book == null) {
 			if (other.book != null)
 				return false;
