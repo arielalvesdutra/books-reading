@@ -90,10 +90,9 @@ public class AuthorService {
 	private Example<Author> getExampleToFindContaingNameCaseInsensitive(String name) {
 		Author author = new Author();
 		author.setName(name);
-		Example<Author> authorExample = Example.of(author, 
-								ExampleMatcher.matchingAny()
-															.withIgnoreCase()
-															.withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
+		Example<Author> authorExample = Example.of(author, ExampleMatcher.matchingAny()
+				.withIgnoreCase()
+				.withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
 
 		return authorExample;
 	}

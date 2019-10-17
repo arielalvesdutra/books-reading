@@ -1,6 +1,6 @@
 package dev.arielalvesdutra.booksreadings.controllers.dto;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 
 import dev.arielalvesdutra.booksreadings.entities.Comment;
 
@@ -19,7 +19,7 @@ public class CreateCommentDTO {
 	}
 	
 	public Comment toComment() {
-		Comment comment = new Comment(this.getContent(), ZonedDateTime.now());
+		Comment comment = new Comment(this.getContent(), OffsetDateTime.now());
 		
 		return comment;
 	}

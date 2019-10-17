@@ -1,7 +1,7 @@
 package dev.arielalvesdutra.booksreadings.entities;
 
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,7 +22,7 @@ public class Comment implements Serializable {
 	
 	private String content;
 	
-	private ZonedDateTime timestamp;
+	private OffsetDateTime timestamp;
 	
 	@ManyToOne
 	@JsonIgnoreProperties("comments")
@@ -31,7 +31,7 @@ public class Comment implements Serializable {
 	
 	public Comment() {}
 
-	public Comment(String content, ZonedDateTime now) {
+	public Comment(String content, OffsetDateTime now) {
 		this.content = content;
 		this.timestamp = now;
 	}
@@ -52,11 +52,11 @@ public class Comment implements Serializable {
 		this.content = content;
 	}
 
-	public ZonedDateTime getTimestamp() {
+	public OffsetDateTime getTimestamp() {
 		return timestamp;
 	}
 
-	public void setTimestamp(ZonedDateTime timestamp) {
+	public void setTimestamp(OffsetDateTime timestamp) {
 		this.timestamp = timestamp;
 	}
 

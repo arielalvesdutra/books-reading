@@ -8,7 +8,7 @@ import dev.arielalvesdutra.booksreadings.entities.BookReading;
 
 public interface BookReadingRepository extends JpaRepository<BookReading, Long>{
 
-  BookReading findByIdAndUser_Id(Long id, Long userId);
+  BookReading findByIdAndReader_Id(Long id, Long userId);
   
-  Page<BookReading> findAllByUser_Id(Long userId, Pageable pagination);
+  Page<BookReading> findAllByReader_Id(Long userId, Pageable pagination);
 }

@@ -15,7 +15,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import dev.arielalvesdutra.booksreadings.entities.enums.ReadingStatus;
@@ -32,10 +31,12 @@ public class BookReading implements Serializable {
 	@ManyToOne
 	private Book book;
 
-	@JsonIgnore
-	@JoinColumn(name = "user_id")
+	@JsonIgnoreProperties({ "booksReadings", "password", "profiles",
+		"authorities", "accountNonExpired", "accountNonLocked", "credentialsNonExpired",
+		"username", "enabled"})
+	@JoinColumn(name = "reader_id")
 	@ManyToOne
-	private User user;
+	private User reader;
 	
 	@Enumerated(EnumType.STRING)
 	private ReadingStatus readingStatus = ReadingStatus.RESERVED;
@@ -50,9 +51,9 @@ public class BookReading implements Serializable {
 		this.book =  book;
 	}
 	
-	public BookReading(Book book, User user) {
+	public BookReading(Book book, User reader) {
 		this.book =  book;
-		this.user = user;
+		this.reader = reader;
 	}
 
 	public List<Comment> getComments() {
@@ -80,12 +81,12 @@ public class BookReading implements Serializable {
 		this.readingStatus = readingStatus;
 	}
 
-	public User getUser() {
-		return user;
+	public User getReader() {
+		return reader;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setReader(User reader) {
+		this.reader = reader;
 	}
 
 	public Long getId() {
@@ -116,7 +117,7 @@ public class BookReading implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((book == null) ? 0 : book.hashCode());
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
+		result = prime * result + ((reader == null) ? 0 : reader.hashCode());
 		return result;
 	}
 
@@ -134,10 +135,10 @@ public class BookReading implements Serializable {
 				return false;
 		} else if (!book.equals(other.book))
 			return false;
-		if (user == null) {
-			if (other.user != null)
+		if (reader == null) {
+			if (other.reader != null)
 				return false;
-		} else if (!user.equals(other.user))
+		} else if (!reader.equals(other.reader))
 			return false;
 		return true;
 	}

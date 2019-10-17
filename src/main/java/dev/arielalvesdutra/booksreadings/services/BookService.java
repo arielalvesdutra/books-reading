@@ -108,10 +108,9 @@ public class BookService {
 	private Example<Book> getExampleToFindContaingNameCaseInsensitive(String name) {
 		Book book = new Book();
 		book.setName(name);
-		Example<Book> bookExample = Example.of(book, 
-								ExampleMatcher.matchingAny()
-															.withIgnoreCase()
-															.withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
+		Example<Book> bookExample = Example.of(book, ExampleMatcher.matchingAny()
+				.withIgnoreCase()
+				.withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
 
 		return bookExample;
 	}

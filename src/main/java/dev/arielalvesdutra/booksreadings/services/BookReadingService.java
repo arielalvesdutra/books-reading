@@ -25,7 +25,7 @@ public class BookReadingService {
 	}
 	
 	public Page<BookReading> findAllByUserId(Long userId, Pageable pagination) {
-		return this.bookReadingRepository.findAllByUser_Id(userId, pagination);
+		return this.bookReadingRepository.findAllByReader_Id(userId, pagination);
 	}
 
 	public BookReading find(Long bookReadingId) {
@@ -74,7 +74,7 @@ public class BookReadingService {
 	}
 
 	public BookReading findByIdAndUserId(Long bookReadingId, Long userId) {
-		BookReading bookReading = this.bookReadingRepository.findByIdAndUser_Id(bookReadingId, userId);
+		BookReading bookReading = this.bookReadingRepository.findByIdAndReader_Id(bookReadingId, userId);
 		
 		if (bookReading == null) {
 			throw new EntityNotFoundException("Leitura de ID " 

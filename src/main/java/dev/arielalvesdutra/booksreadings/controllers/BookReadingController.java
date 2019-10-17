@@ -47,10 +47,10 @@ public class BookReadingController {
 		return ResponseEntity.ok().body(comments);
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
-	public ResponseEntity<BookReading> retrieveById(@PathVariable Long id) {
+	@RequestMapping(method = RequestMethod.GET, value = "/{bookReadingId}")
+	public ResponseEntity<BookReading> retrieveById(@PathVariable Long bookReadingId) {
 		
-		BookReading booksReadingPage = this.bookReadingService.find(id);
+		BookReading booksReadingPage = this.bookReadingService.find(bookReadingId);
 		
 		return ResponseEntity.ok().body(booksReadingPage);
 	}

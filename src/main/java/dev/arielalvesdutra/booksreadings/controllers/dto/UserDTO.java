@@ -5,6 +5,8 @@ import java.util.Set;
 
 import org.springframework.data.domain.Page;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import dev.arielalvesdutra.booksreadings.entities.BookReading;
 import dev.arielalvesdutra.booksreadings.entities.User;
 
@@ -13,6 +15,8 @@ public class UserDTO {
 	private Long id;
 	private String name;
 	private String email;
+	
+	@JsonIgnoreProperties("reader")
 	private Set<BookReading> booksReadings = new HashSet<BookReading>();
 	
 	public UserDTO(User user) {

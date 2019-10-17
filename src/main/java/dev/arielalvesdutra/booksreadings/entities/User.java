@@ -39,8 +39,8 @@ public class User implements UserDetails {
 	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Profile> profiles = new ArrayList<Profile>();
 
-	@JsonIgnoreProperties("user")
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL,  orphanRemoval = true)
+	@JsonIgnoreProperties("reader")
+	@OneToMany(mappedBy = "reader", cascade = CascadeType.ALL,  orphanRemoval = true)
 	private Set<BookReading> booksReadings = new HashSet<BookReading>();
 	
 	public Set<BookReading> getBooksReadings() {
@@ -52,7 +52,7 @@ public class User implements UserDetails {
 	}
 
 	public void addBookReading(BookReading booksReading) {
-		booksReading.setUser(this);
+		booksReading.setReader(this);
 		this.booksReadings.add(booksReading);
 	}
 
