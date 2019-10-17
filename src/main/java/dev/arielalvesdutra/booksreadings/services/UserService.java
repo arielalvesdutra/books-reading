@@ -13,7 +13,6 @@ import dev.arielalvesdutra.booksreadings.entities.BookReading;
 import dev.arielalvesdutra.booksreadings.entities.User;
 import dev.arielalvesdutra.booksreadings.entities.enums.ReadingStatus;
 import dev.arielalvesdutra.booksreadings.exceptions.EntityNotFoundException;
-import dev.arielalvesdutra.booksreadings.repositories.BookReadingRepository;
 import dev.arielalvesdutra.booksreadings.repositories.UserRepository;
 
 @Service
@@ -23,10 +22,10 @@ public class UserService {
 	private BookService bookService;
 	
 	@Autowired
-	private UserRepository userRepository;
-
+	private BookReadingService bookReadingService;
+	
 	@Autowired
-	private BookReadingRepository bookReadingRepository;
+	private UserRepository userRepository;
 	
 	public User create(User user) {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -61,13 +60,14 @@ public class UserService {
 		return user;
 	}
 
-	public User addBookReading(Long id, Long bookId) {
+	public BookReading addBookReading(Long userId, Long bookId) {
 		Book book = this.bookService.find(bookId);
-		BookReading bookReading = new BookReading(book);
+		User user = this.find(userId);
+		BookReading bookReading = new BookReading(book, user);
 
-		User user = this.addBookReading(id, bookReading);
+		BookReading savedBookReading = this.bookReadingService.create(bookReading);
 
-		return user;
+		return savedBookReading;
 	}
 
 	public User removeBookReading(Long id, BookReading bookReading) {
@@ -80,10 +80,7 @@ public class UserService {
 	}
 
 	public User removeBookReading(Long userId, Long bookReadingId) {
-		BookReading bookReading = this.bookReadingRepository
-							.findById(bookReadingId)
-							.orElseThrow(() -> 	
-							new EntityNotFoundException("Leitura com ID "+ bookReadingId +" não encontrada"));
+		BookReading bookReading = this.bookReadingService.find(bookReadingId);
 		
 		User user = this.removeBookReading(userId, bookReading);
 
@@ -91,24 +88,11 @@ public class UserService {
 	}
 
 	public BookReading updateBookReadingStatus(Long userId, Long bookReadingId, ReadingStatus readingStatus) {
-		BookReading bookReading = this.findBookReading(userId, bookReadingId);
-
+		BookReading bookReading = new BookReading();
 		bookReading.setReadingStatus(readingStatus);
-		this.bookReadingRepository.save(bookReading);
 		
-		return bookReading;
-	}
-	
-	private BookReading findBookReading(Long userId, Long bookReadingId) {
-		BookReading bookReading = 
-			this.bookReadingRepository.findByIdAndUser_Id(bookReadingId, userId);
-
-		if (bookReading == null) {
-			throw new EntityNotFoundException("Leitura de ID " 
-							+ bookReadingId + " do usuário de ID "
-							+ userId + " Não encontrada");
-		}
-
-		return bookReading;
+		BookReading savedBookReading = this.bookReadingService.update(bookReadingId, bookReading, userId);
+		
+		return savedBookReading;
 	}
 }

@@ -1,7 +1,10 @@
 package dev.arielalvesdutra.booksreadings.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -10,8 +13,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import dev.arielalvesdutra.booksreadings.entities.enums.ReadingStatus;
 
@@ -31,14 +36,40 @@ public class BookReading implements Serializable {
 	@JoinColumn(name = "user_id")
 	@ManyToOne
 	private User user;
-
+	
 	@Enumerated(EnumType.STRING)
 	private ReadingStatus readingStatus = ReadingStatus.RESERVED;
+	
+	@OneToMany(mappedBy = "bookReading", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnoreProperties("bookReading")
+	private List<Comment> comments = new ArrayList<Comment>();
 
 	public BookReading() {}
 
 	public BookReading(Book book) {
 		this.book =  book;
+	}
+	
+	public BookReading(Book book, User user) {
+		this.book =  book;
+		this.user = user;
+	}
+
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+
+	public void addComment(Comment comment) {
+		comment.setBookReading(this);
+		this.getComments().add(comment);
+	}
+	
+	public void removeComment(Comment comment) {
+		this.comments.remove(comment);
 	}
 	
 	public ReadingStatus getReadingStatus() {
