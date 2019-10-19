@@ -48,25 +48,33 @@ public class UserController {
 		return ResponseEntity.created(uri).body(new UserDTO(createduser));
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
-	public ResponseEntity<UserDTO> retrieveById(@PathVariable Long id) {
+	@RequestMapping(method = RequestMethod.DELETE, value = "/{userId}")
+	public ResponseEntity<UserDTO> deleteById(@PathVariable Long userId) {
 		
-		User user = this.userService.find(id);
+		this.userService.deleteById(userId);		
+		
+		return ResponseEntity.ok().build();		
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/{userId}")
+	public ResponseEntity<UserDTO> retrieveById(@PathVariable Long userId) {
+		
+		User user = this.userService.find(userId);
 		
 		return ResponseEntity.ok().body(new UserDTO(user));
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/{id}/books-readings")
+	@RequestMapping(method = RequestMethod.POST, value = "/{userId}/books-readings")
 	public ResponseEntity<BookReading> addBookReading(
-			@PathVariable Long id, 
+			@PathVariable Long userId, 
 			@RequestBody CreateBookReadingDTO bookReadDTO,
 			UriComponentsBuilder uriBuilder
 	) {
 
-		BookReading createdBookReading = this.userService.addBookReading(id, bookReadDTO.getBookId());
+		BookReading createdBookReading = this.userService.addBookReading(userId, bookReadDTO.getBookId());
 		
 		Map<String, Long> pathParams = new HashMap<>();
-		pathParams.put("userId", id);
+		pathParams.put("userId", userId);
 		pathParams.put("bookReadingId", createdBookReading.getId());
 		
 		URI uri = uriBuilder.path("/users/{userId}/books-readings/{bookReadingId}")
@@ -76,11 +84,11 @@ public class UserController {
 		return ResponseEntity.created(uri).body(createdBookReading);
 	}
 
-	@RequestMapping(method = RequestMethod.DELETE, value = "/{id}/books-readings/{bookReadId}")
+	@RequestMapping(method = RequestMethod.DELETE, value = "/{userId}/books-readings/{bookReadingId}")
 	public ResponseEntity<?> deleteBookReadingById(
-		    @PathVariable Long id, @PathVariable Long bookReadId) {
+		    @PathVariable Long userId, @PathVariable Long bookReadingId) {
 
-		this.userService.removeBookReading(id, bookReadId);
+		this.userService.removeBookReading(userId, bookReadingId);
 
 		return ResponseEntity.ok().build();
 	}

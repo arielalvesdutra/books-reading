@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import dev.arielalvesdutra.booksreadings.controllers.dto.CreateAuthorDTO;
 import dev.arielalvesdutra.booksreadings.entities.Author;
 import dev.arielalvesdutra.booksreadings.services.AuthorService;
 
@@ -28,9 +29,11 @@ public class AuthorController {
 	private AuthorService authorService;
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Author> create(@Valid @RequestBody Author author, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<Author> create(
+			@Valid @RequestBody CreateAuthorDTO createAuthorDto, 
+			UriComponentsBuilder uriBuilder) {
 		
-		Author createdAuthor = this.authorService.create(author);
+		Author createdAuthor = this.authorService.create(createAuthorDto.toAuthor());
 		
 		URI uri = uriBuilder.path("/authors/{id}")
 							.buildAndExpand(createdAuthor.getId())

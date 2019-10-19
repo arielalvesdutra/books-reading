@@ -55,16 +55,17 @@ public class BookReadingController {
 		return ResponseEntity.ok().body(booksReadingPage);
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value = "/{id}/comments")
+	@RequestMapping(method = RequestMethod.POST, value = "/{bookReadingId}/comments")
 	public ResponseEntity<Comment> addComment(
-			@PathVariable Long id, 
+			@PathVariable Long bookReadingId, 
 			@RequestBody CreateCommentDTO createCommentDto,
 			UriComponentsBuilder uriBuilder) {
 	
-		Comment createdComment = this.bookReadingService.addComment(id, createCommentDto.toComment());
+		Comment createdComment = 
+				this.bookReadingService.addComment(bookReadingId, createCommentDto.toComment());
 		
 		Map<String, Long> pathParams = new HashMap<>();
-		pathParams.put("bookReadingId", id);
+		pathParams.put("bookReadingId", bookReadingId);
 		pathParams.put("commentId", createdComment.getId());
 		
 		URI uri = uriBuilder.path("/books-readings/{bookReadingId}/comments/{commentId}")

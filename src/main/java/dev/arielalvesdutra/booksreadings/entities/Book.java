@@ -46,6 +46,11 @@ public class Book implements Serializable, Cloneable {
 	
 	public Book() {}
 
+	public Book(String name, Year publicationYear) {
+		this.setName(name);
+		this.setPublicationYear(publicationYear);               
+	}
+
 	@JsonIgnore
 	public Set<BookReading> getBooksReadings() {
 		return this.booksReadings;

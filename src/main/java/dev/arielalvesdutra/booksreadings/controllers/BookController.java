@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import dev.arielalvesdutra.booksreadings.controllers.dto.CreateBookDTO;
 import dev.arielalvesdutra.booksreadings.controllers.dto.UpdateBookAuthorsDTO;
 import dev.arielalvesdutra.booksreadings.entities.Author;
 import dev.arielalvesdutra.booksreadings.entities.Book;
@@ -32,9 +33,11 @@ public class BookController {
 	private BookService bookService;
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Book> create(@Valid @RequestBody Book book, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<Book> create(
+			@Valid @RequestBody CreateBookDTO createBookDto, 
+			UriComponentsBuilder uriBuilder) {
 		
-		Book createdBook = this.bookService.create(book);
+		Book createdBook = this.bookService.create(createBookDto.toBook());
 		URI uri = uriBuilder.path("/books/{id}")
 				.buildAndExpand(createdBook.getId())
 				.toUri();

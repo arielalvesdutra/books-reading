@@ -16,10 +16,11 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 public class User implements UserDetails {
@@ -34,6 +35,7 @@ public class User implements UserDetails {
 		
 	private String name;
 	
+	@JsonIgnore
 	private String password;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -96,6 +98,7 @@ public class User implements UserDetails {
 		this.password = password;
 	}
 	
+	@JsonIgnore
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return this.profiles;
@@ -111,21 +114,25 @@ public class User implements UserDetails {
 		return this.email;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isAccountNonExpired() {
 		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isAccountNonLocked() {
 		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isEnabled() {
 		return true;
