@@ -17,10 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import dev.arielalvesdutra.booksreadings.controllers.dto.CreateCommentDTO;
+import dev.arielalvesdutra.booksreadings.controllers.dto.RetrieveBookReadingDTO;
+import dev.arielalvesdutra.booksreadings.controllers.dto.RetrieveCommentDTO;
 import dev.arielalvesdutra.booksreadings.entities.BookReading;
 import dev.arielalvesdutra.booksreadings.entities.Comment;
 import dev.arielalvesdutra.booksreadings.services.BookReadingService;
+import io.swagger.annotations.Api;
 
+@Api(tags = "BookReading", description = "Book Reading Resource")
 @RequestMapping("/books-readings")
 @RestController
 public class BookReadingController {
@@ -29,34 +33,37 @@ public class BookReadingController {
 	private BookReadingService bookReadingService;
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<Page<BookReading>> list(
+	public ResponseEntity<Page<RetrieveBookReadingDTO>> list(
 					@PageableDefault(sort="id", page = 0, size = 10) Pageable pagination) {
 
 		Page<BookReading> booksReadingPage = this.bookReadingService.findAll(pagination);
 		
-		return  ResponseEntity.ok().body(booksReadingPage);		
+		return ResponseEntity.ok().body(
+				RetrieveBookReadingDTO.fromBookReadingPageToRetriveBookReadingDTOPage(booksReadingPage));				
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/{bookReadingId}/comments")
-	public ResponseEntity<Page<Comment>> listComments(
+	public ResponseEntity<Page<RetrieveCommentDTO>> listComments(
 			@PathVariable Long bookReadingId,
 			@PageableDefault(sort="id", page = 0, size = 10) Pageable pagination) {
 		
 		Page<Comment> comments = this.bookReadingService.findComments(bookReadingId, pagination);
 		
-		return ResponseEntity.ok().body(comments);
+		return ResponseEntity.ok()
+				.body(RetrieveCommentDTO.fromCommentPageToRetrieveCommentDTOPage(comments));
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/{bookReadingId}")
-	public ResponseEntity<BookReading> retrieveById(@PathVariable Long bookReadingId) {
+	public ResponseEntity<RetrieveBookReadingDTO> retrieveById(@PathVariable Long bookReadingId) {
 		
 		BookReading booksReadingPage = this.bookReadingService.find(bookReadingId);
 		
-		return ResponseEntity.ok().body(booksReadingPage);
+		return ResponseEntity.ok()
+				.body(new RetrieveBookReadingDTO(booksReadingPage));
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/{bookReadingId}/comments")
-	public ResponseEntity<Comment> addComment(
+	public ResponseEntity<RetrieveCommentDTO> addComment(
 			@PathVariable Long bookReadingId, 
 			@RequestBody CreateCommentDTO createCommentDto,
 			UriComponentsBuilder uriBuilder) {
@@ -72,7 +79,7 @@ public class BookReadingController {
 				.buildAndExpand(pathParams)
 				.toUri();
 		
-		return ResponseEntity.created(uri).body(createdComment);
+		return ResponseEntity.created(uri).body(new RetrieveCommentDTO(createdComment));
 	}
 	
 	@RequestMapping(method = RequestMethod.DELETE, value = "/{bookReadingId}/comments/{commentId}")
@@ -86,13 +93,13 @@ public class BookReadingController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/{bookReadingId}/comments/{commentId}")
-	public ResponseEntity<Comment> retrieveCommentById(
+	public ResponseEntity<RetrieveCommentDTO> retrieveCommentById(
 			@PathVariable Long bookReadingId,
 			@PathVariable Long commentId){
 		
 		Comment comment = this.bookReadingService.findComment(bookReadingId, commentId);
 		
-		return ResponseEntity.ok().body(comment);
+		return ResponseEntity.ok().body(new RetrieveCommentDTO(comment));
 	}
 	
 }

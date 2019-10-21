@@ -3,9 +3,11 @@ package dev.arielalvesdutra.booksreadings.controllers.dto;
 import java.time.OffsetDateTime;
 
 import dev.arielalvesdutra.booksreadings.entities.Comment;
+import io.swagger.annotations.ApiModelProperty;
 
 public class CreateCommentDTO {
 	
+	@ApiModelProperty(required = true)
 	private String content;
 	
 	public CreateCommentDTO() {	}

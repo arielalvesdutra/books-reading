@@ -13,8 +13,7 @@ import dev.arielalvesdutra.booksreadings.entities.Author;
 import dev.arielalvesdutra.booksreadings.entities.Book;
 import io.swagger.annotations.ApiModelProperty;
 
-
-public class CreateBookDTO {
+public class UpdateBookDTO {
 	
 	@ApiModelProperty(example = "Sapiens: Uma Breve História da Humanidade", required = true, position = 1)
 	@NotEmpty
@@ -28,9 +27,9 @@ public class CreateBookDTO {
 	@ApiModelProperty(notes = "Array de IDs dos autores", required = false, position = 3)
 	private List<Integer> authorsIds = new ArrayList<Integer>();
 	
-	public CreateBookDTO() {}
+	public UpdateBookDTO() {}
 	
-	public CreateBookDTO(@NotEmpty @Size(min = 5) String name, @NotEmpty Integer publicationYear) {
+	public UpdateBookDTO(String name, Integer publicationYear) {
 		
 		this.name = name;
 		this.publicationYear = publicationYear;
@@ -66,7 +65,7 @@ public class CreateBookDTO {
 		
 		return book;
 	}
-	
+
 	private Set<Author> withAuthors() {
 		Set<Author> authors = new HashSet<Author>();
 		

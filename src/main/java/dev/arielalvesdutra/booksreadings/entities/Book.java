@@ -1,7 +1,6 @@
 package dev.arielalvesdutra.booksreadings.entities;
 
 import java.io.Serializable;
-import java.time.Year;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,33 +19,40 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
 public class Book implements Serializable, Cloneable {
 	
 	private static final long serialVersionUID = 1L;
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@ApiModelProperty(example = "1" ,position = 1)
 	private Long id;
 	
+	@ApiModelProperty(example = "Nome do livro" ,position = 2)
 	@NotBlank
 	private String name;
 	
+	@ApiModelProperty(example = "2001" ,position = 3)
 	@NotNull
-	private Year publicationYear;
+	private Integer publicationYear;
 	
 	@ManyToMany
 	@JsonIgnoreProperties("books")
 	@JoinTable(name="author_book",
 	 joinColumns = @JoinColumn(name="author_id", referencedColumnName= "id"),
 	 inverseJoinColumns = @JoinColumn(name="book_id", referencedColumnName = "id"))
+	@JsonIgnore
 	private Set<Author> authors = new HashSet<Author>();
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<BookReading> booksReadings = new HashSet<BookReading>();
 	
 	public Book() {}
 
-	public Book(String name, Year publicationYear) {
+	public Book(String name, Integer publicationYear) {
 		this.setName(name);
 		this.setPublicationYear(publicationYear);               
 	}
@@ -84,11 +90,11 @@ public class Book implements Serializable, Cloneable {
 		this.authors = authors;
 	}
 	
-	public Year getPublicationYear() {
+	public Integer getPublicationYear() {
 		return publicationYear;
 	}
 
-	public void setPublicationYear(Year publicationYear) {
+	public void setPublicationYear(Integer publicationYear) {
 		this.publicationYear = publicationYear;
 	}
 	

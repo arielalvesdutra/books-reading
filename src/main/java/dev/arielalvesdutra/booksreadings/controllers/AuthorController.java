@@ -18,9 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import dev.arielalvesdutra.booksreadings.controllers.dto.CreateAuthorDTO;
+import dev.arielalvesdutra.booksreadings.controllers.dto.RetrieveAuthorDTO;
+import dev.arielalvesdutra.booksreadings.controllers.dto.UpdateAuthorDTO;
 import dev.arielalvesdutra.booksreadings.entities.Author;
 import dev.arielalvesdutra.booksreadings.services.AuthorService;
+import io.swagger.annotations.Api;
 
+@Api(tags = "Author", description = "Author Resource")
 @RestController
 @RequestMapping("/authors")
 public class AuthorController {
@@ -29,7 +33,7 @@ public class AuthorController {
 	private AuthorService authorService;
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Author> create(
+	public ResponseEntity<RetrieveAuthorDTO> create(
 			@Valid @RequestBody CreateAuthorDTO createAuthorDto, 
 			UriComponentsBuilder uriBuilder) {
 		
@@ -39,39 +43,43 @@ public class AuthorController {
 							.buildAndExpand(createdAuthor.getId())
 							.toUri();
 		
-		return ResponseEntity.created(uri).body(createdAuthor);		
+		return ResponseEntity.created(uri).body(new RetrieveAuthorDTO(createdAuthor));		
 	}
 	
-	@RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
-	public ResponseEntity<?> deleteById(@PathVariable Long id) {
+	@RequestMapping(method = RequestMethod.DELETE, value = "/{authorId}")
+	public ResponseEntity<?> deleteById(@PathVariable Long authorId) {
 		
-		this.authorService.deleteById(id);
+		this.authorService.deleteById(authorId);
 		
 		return ResponseEntity.ok().build();
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<Page<Author>> list(@RequestParam(required = false) String name,
-					@PageableDefault(sort="name", page = 0, size = 10) Pageable pagination) {
+	public ResponseEntity<Page<RetrieveAuthorDTO>> list(
+			@RequestParam(required = false) String name,
+			@PageableDefault(sort="name", page = 0, size = 10) Pageable pagination) {
 		
-		Page<Author> authorsList = this.authorService.findAll(name, pagination);
+		Page<Author> authorsPage = this.authorService.findAll(name, pagination);		
 		
-		return ResponseEntity.ok().body(authorsList);		
+		return ResponseEntity.ok().body(
+				RetrieveAuthorDTO.fromAuthorPageToRetrieveAuthorDTOPage(authorsPage));				
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
-	public ResponseEntity<Author> retrieveById(@PathVariable Long id) {
+	@RequestMapping(method = RequestMethod.GET, value = "/{authorId}")
+	public ResponseEntity<RetrieveAuthorDTO> retrieveById(@PathVariable Long authorId) {
 		
-		Author author = this.authorService.find(id);
+		Author author = this.authorService.find(authorId);
 		
-		return ResponseEntity.ok().body(author);
+		return ResponseEntity.ok().body(new RetrieveAuthorDTO(author));
 	}
 	
-	@RequestMapping(method = RequestMethod.PUT, value = "/{id}")
-	public ResponseEntity<Author> update(@PathVariable Long id, @Valid @RequestBody Author author) {
+	@RequestMapping(method = RequestMethod.PUT, value = "/{authorId}")
+	public ResponseEntity<RetrieveAuthorDTO> update(
+			@PathVariable Long authorId, 
+			@Valid @RequestBody UpdateAuthorDTO updateAuthorDto) {
 
-		Author updatedAuthor = this.authorService.update(id, author);
+		Author updatedAuthor = this.authorService.update(authorId, updateAuthorDto.toAuthor());
 		
-		return ResponseEntity.ok().body(updatedAuthor);
+		return ResponseEntity.ok().body(new RetrieveAuthorDTO(updatedAuthor));
 	}
 }

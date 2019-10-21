@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import dev.arielalvesdutra.booksreadings.controllers.dto.LoginFormDTO;
 import dev.arielalvesdutra.booksreadings.controllers.dto.TokenDTO;
 import dev.arielalvesdutra.booksreadings.services.TokenService;
+import io.swagger.annotations.Api;
 
+@Api(tags = "Auth", description = "Auth Resource")
 @RequestMapping("auth")
 @RestController
 public class AuthController {

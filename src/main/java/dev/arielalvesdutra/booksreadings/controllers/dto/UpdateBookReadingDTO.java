@@ -1,9 +1,11 @@
 package dev.arielalvesdutra.booksreadings.controllers.dto;
 
 import dev.arielalvesdutra.booksreadings.entities.enums.ReadingStatus;
+import io.swagger.annotations.ApiModelProperty;
 
 public class UpdateBookReadingDTO {
   
+	@ApiModelProperty(required = true)
 	private ReadingStatus readingStatus;
 	
 	public UpdateBookReadingDTO() {}

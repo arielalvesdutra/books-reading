@@ -9,9 +9,9 @@ import dev.arielalvesdutra.booksreadings.entities.Author;
 import io.swagger.annotations.ApiModelProperty;
 
 
-public class CreateAuthorDTO {
+public class UpdateAuthorDTO {
 	
-	@ApiModelProperty(example = "Martin Fowler", required = true, position = 1)
+	@ApiModelProperty(example = "Yuval Harari", required = true, position = 1)
 	@NotEmpty
 	@Size(min = 5)
 	private String name;
@@ -21,11 +21,9 @@ public class CreateAuthorDTO {
 	@Pattern(regexp = ".+@.+\\.[a-z]+")
 	private String email;
 	
-	public CreateAuthorDTO() {}
+	public UpdateAuthorDTO() {}
 	
-	public CreateAuthorDTO(@NotEmpty @Size(min = 5) String name,
-			@NotBlank @Pattern(regexp = ".+@.+\\.[a-z]+") String email) {
-		super();
+	public UpdateAuthorDTO(String name, String email) {
 		this.name = name;
 		this.email = email;
 	}
@@ -47,7 +45,7 @@ public class CreateAuthorDTO {
 	}
 	
 	public Author toAuthor() {
-		Author author = new Author(this.name, this.email);
+		Author author = new Author(this.getName(), this.getEmail());
 		
 		return author;	
 	}

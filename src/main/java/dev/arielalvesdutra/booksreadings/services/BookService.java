@@ -65,6 +65,15 @@ public class BookService {
 
 		return bookPage;
 	}
+	
+
+	public Page<Author> findAllAuthorsByBookId(Long bookId, Pageable pagination) {
+		Book book = this.find(bookId);
+		
+		Page<Author> authorsPage = this.authorService.findAllByBookId(book.getId(), pagination);
+		
+		return authorsPage;
+	}
 
 	public Book update(Long id, Book parameterBook) {
 		Book existingBook = this.find(id);
@@ -75,7 +84,7 @@ public class BookService {
 		
 		return existingBook;
 	}
-
+	
 	public void updateBookAuthors(Long id, UpdateBookAuthorsDTO updateBookAuthorsDto) {
 		Book book = this.find(id);
 	
