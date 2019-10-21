@@ -14,24 +14,31 @@ import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 public class Author implements Serializable, Cloneable {
 	
 	private static final long serialVersionUID = 1L;
 
+	@ApiModelProperty(example = "1" ,position = 1)
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@ApiModelProperty(example = "Nome do autor" ,position = 2)
 	@NotBlank
 	private String name;
 	
+	@ApiModelProperty(example = "email@exemplo.com" ,position = 3)
 	@NotBlank
 	@Pattern(regexp = ".+@.+\\.[a-z]+")
 	private String email;
 	
 	@JsonIgnoreProperties("authors")
+	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name="author_book",
 	 inverseJoinColumns = @JoinColumn(name="author_id", referencedColumnName= "id"),
@@ -39,6 +46,11 @@ public class Author implements Serializable, Cloneable {
 	private Set<Book> books = new HashSet<Book>();	
 
 	public Author() {}
+
+	public Author(String name, String email) {
+		this.setName(name);
+		this.setEmail(email);
+	}
 
 	public Long getId() {
 		return id;

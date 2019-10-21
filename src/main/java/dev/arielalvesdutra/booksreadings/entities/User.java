@@ -16,30 +16,38 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 public class User implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
-	
+
+	@ApiModelProperty(example = "1", position = 1)
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@Column(unique = true)
-	private String email;
 		
+	@ApiModelProperty(example = "Nome do usuário", position = 2)
 	private String name;
 	
+	@ApiModelProperty(example = "email@exemplo.com", required = true, position = 3)
+	@Column(unique = true)
+	private String email;
+	
+	@JsonIgnore
 	private String password;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Profile> profiles = new ArrayList<Profile>();
 
 	@JsonIgnoreProperties("reader")
+	@JsonIgnore
 	@OneToMany(mappedBy = "reader", cascade = CascadeType.ALL,  orphanRemoval = true)
 	private Set<BookReading> booksReadings = new HashSet<BookReading>();
 	
@@ -76,6 +84,7 @@ public class User implements UserDetails {
 		this.email = email;
 	}
 
+	@JsonIgnore
 	public List<Profile> getProfiles() {
 		return profiles;
 	}
@@ -96,36 +105,43 @@ public class User implements UserDetails {
 		this.password = password;
 	}
 	
+	@JsonIgnore
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return this.profiles;
 	}
 
 	@Override
+	@JsonIgnore
 	public String getPassword() {
 		return this.password;
 	}
 
 	@Override
+	@JsonIgnore
 	public String getUsername() {
 		return this.email;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isAccountNonExpired() {
 		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isAccountNonLocked() {
 		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isEnabled() {
 		return true;

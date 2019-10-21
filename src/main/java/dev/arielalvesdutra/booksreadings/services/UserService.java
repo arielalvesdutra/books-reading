@@ -2,6 +2,8 @@ package dev.arielalvesdutra.booksreadings.services;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -94,5 +96,12 @@ public class UserService {
 		BookReading savedBookReading = this.bookReadingService.update(bookReadingId, bookReading, userId);
 		
 		return savedBookReading;
+	}
+
+	@Transactional
+	public void deleteById(Long userId) {
+		User user = this.find(userId);
+		
+		this.userRepository.delete(user);
 	}
 }

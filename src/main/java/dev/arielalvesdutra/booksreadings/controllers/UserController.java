@@ -20,15 +20,18 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import dev.arielalvesdutra.booksreadings.controllers.dto.CreateBookReadingDTO;
 import dev.arielalvesdutra.booksreadings.controllers.dto.CreateUserDTO;
+import dev.arielalvesdutra.booksreadings.controllers.dto.RetrieveBookReadingDTO;
+import dev.arielalvesdutra.booksreadings.controllers.dto.RetrieveUserDTO;
 import dev.arielalvesdutra.booksreadings.controllers.dto.UpdateBookReadingDTO;
-import dev.arielalvesdutra.booksreadings.controllers.dto.UserDTO;
 import dev.arielalvesdutra.booksreadings.entities.BookReading;
 import dev.arielalvesdutra.booksreadings.entities.User;
 import dev.arielalvesdutra.booksreadings.services.BookReadingService;
 import dev.arielalvesdutra.booksreadings.services.UserService;
+import io.swagger.annotations.Api;
 
 @RequestMapping("/users")
 @RestController
+@Api(tags = "User", description = "User Resource")
 public class UserController {
 	
 	@Autowired
@@ -38,88 +41,101 @@ public class UserController {
 	private BookReadingService bookReadingService;
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<UserDTO> create(@Valid @RequestBody CreateUserDTO parameterUser, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<RetrieveUserDTO> create(@Valid @RequestBody CreateUserDTO parameterUser, UriComponentsBuilder uriBuilder) {
 		
 		User createduser = this.userService.create(parameterUser.toUser());
 		URI uri = uriBuilder.path("/users/{id}")
 				.buildAndExpand(createduser.getId())
 				.toUri();
 		
-		return ResponseEntity.created(uri).body(new UserDTO(createduser));
+		return ResponseEntity.created(uri).body(new RetrieveUserDTO(createduser));
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
-	public ResponseEntity<UserDTO> retrieveById(@PathVariable Long id) {
+	@RequestMapping(method = RequestMethod.DELETE, value = "/{userId}")
+	public ResponseEntity<?> deleteById(@PathVariable Long userId) {
 		
-		User user = this.userService.find(id);
+		this.userService.deleteById(userId);		
 		
-		return ResponseEntity.ok().body(new UserDTO(user));
+		return ResponseEntity.ok().build();		
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/{userId}")
+	public ResponseEntity<RetrieveUserDTO> retrieveById(@PathVariable Long userId) {
+		
+		User user = this.userService.find(userId);
+		
+		return ResponseEntity.ok().body(new RetrieveUserDTO(user));
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/{id}/books-readings")
-	public ResponseEntity<BookReading> addBookReading(
-			@PathVariable Long id, 
+	@RequestMapping(method = RequestMethod.POST, value = "/{userId}/books-readings")
+	public ResponseEntity<RetrieveBookReadingDTO> addBookReading(
+			@PathVariable Long userId, 
 			@RequestBody CreateBookReadingDTO bookReadDTO,
 			UriComponentsBuilder uriBuilder
 	) {
 
-		BookReading createdBookReading = this.userService.addBookReading(id, bookReadDTO.getBookId());
+		BookReading createdBookReading = this.userService.addBookReading(userId, bookReadDTO.getBookId());
 		
 		Map<String, Long> pathParams = new HashMap<>();
-		pathParams.put("userId", id);
+		pathParams.put("userId", userId);
 		pathParams.put("bookReadingId", createdBookReading.getId());
 		
 		URI uri = uriBuilder.path("/users/{userId}/books-readings/{bookReadingId}")
 				.buildAndExpand(pathParams)
 				.toUri();
 		
-		return ResponseEntity.created(uri).body(createdBookReading);
+		return ResponseEntity.created(uri).body(
+				new RetrieveBookReadingDTO(createdBookReading));
 	}
 
-	@RequestMapping(method = RequestMethod.DELETE, value = "/{id}/books-readings/{bookReadId}")
+	@RequestMapping(method = RequestMethod.DELETE, value = "/{userId}/books-readings/{bookReadingId}")
 	public ResponseEntity<?> deleteBookReadingById(
-		    @PathVariable Long id, @PathVariable Long bookReadId) {
+		    @PathVariable Long userId, @PathVariable Long bookReadingId) {
 
-		this.userService.removeBookReading(id, bookReadId);
+		this.userService.removeBookReading(userId, bookReadingId);
 
 		return ResponseEntity.ok().build();
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/{userId}/books-readings")
-	public Page<BookReading> listBooksReadingsByUserId(
+	public ResponseEntity<Page<RetrieveBookReadingDTO>> listBooksReadingsByUserId(
 					@PathVariable Long userId,
 					@PageableDefault(sort = "id", page = 0, size = 10) Pageable pagination) {
 
 		User user = this.userService.find(userId);
 		
-		Page<BookReading> bookReading = 
+		Page<BookReading> bookReadingPage = 
 				this.bookReadingService.findAllByUserId(user.getId(), pagination);
 
-		return bookReading;
+		return ResponseEntity.ok().body(
+				RetrieveBookReadingDTO.
+				fromBookReadingPageToRetriveBookReadingDTOPage(bookReadingPage));
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public Page<UserDTO> list(
+	public ResponseEntity<Page<RetrieveUserDTO>> list(
 			@PageableDefault(sort = "name", page = 0, size = 10) Pageable pagination) {
 		
 		Page<User> users = this.userService.findAll(pagination);
 		
-		return UserDTO.fromUserPageToUserDTOPage(users);
+		return ResponseEntity.ok().body(
+				RetrieveUserDTO.fromUserPageToRetrieveUserDTOPage(users));
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/{userId}/books-readings/{bookReadingId}")
-	public ResponseEntity<BookReading> retrieveBookReadingByBookReadingId(
+	public ResponseEntity<RetrieveBookReadingDTO> retrieveBookReadingByBookReadingId(
 			@PathVariable Long userId, 
 			@PathVariable Long bookReadingId) {
 		
 		
 		BookReading bookReading = this.bookReadingService.findByIdAndUserId(bookReadingId, userId);
 		
-		return ResponseEntity.ok().body(bookReading);
+		return ResponseEntity.ok()
+				.body(new RetrieveBookReadingDTO(bookReading));
 	}
 
 	@RequestMapping(method = RequestMethod.PATCH, value = "/{userId}/books-readings/{bookReadingId}")
-	public ResponseEntity<BookReading> updateBookReadingStatus(
+	public ResponseEntity<RetrieveBookReadingDTO> updateBookReadingStatus(
 			@PathVariable Long userId, 
 			@PathVariable Long bookReadingId, 
 			@RequestBody UpdateBookReadingDTO updateBookReadingDto
@@ -128,6 +144,6 @@ public class UserController {
 		BookReading bookReading = this.userService.updateBookReadingStatus(
 				userId, bookReadingId, updateBookReadingDto.getReadingStatus());
 		
-		return ResponseEntity.ok(bookReading);
+		return ResponseEntity.ok(new RetrieveBookReadingDTO(bookReading));
 	}
 }

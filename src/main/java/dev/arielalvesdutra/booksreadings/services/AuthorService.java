@@ -114,4 +114,8 @@ public class AuthorService {
 			throw new RuntimeException(e.getMessage());
 		}		
 	}
+
+	public Page<Author> findAllByBookId(Long bookId, Pageable pagination) {
+		return this.authorRepository.findAllByBooks_Id(bookId, pagination);
+	}
 }

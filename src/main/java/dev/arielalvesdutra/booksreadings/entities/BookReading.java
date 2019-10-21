@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import dev.arielalvesdutra.booksreadings.entities.enums.ReadingStatus;
@@ -29,6 +30,7 @@ public class BookReading implements Serializable {
 	
 	@JoinColumn(name = "book_id")
 	@ManyToOne
+	@JsonIgnore
 	private Book book;
 
 	@JsonIgnoreProperties({ "booksReadings", "password", "profiles",
@@ -36,6 +38,7 @@ public class BookReading implements Serializable {
 		"username", "enabled"})
 	@JoinColumn(name = "reader_id")
 	@ManyToOne
+	@JsonIgnore
 	private User reader;
 	
 	@Enumerated(EnumType.STRING)
@@ -43,6 +46,7 @@ public class BookReading implements Serializable {
 	
 	@OneToMany(mappedBy = "bookReading", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonIgnoreProperties("bookReading")
+	@JsonIgnore
 	private List<Comment> comments = new ArrayList<Comment>();
 
 	public BookReading() {}

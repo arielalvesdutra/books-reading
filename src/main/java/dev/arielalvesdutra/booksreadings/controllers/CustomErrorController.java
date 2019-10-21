@@ -14,7 +14,10 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 
 import dev.arielalvesdutra.booksreadings.error_handlers.dto.ResponseErrorDTO;
+import springfox.documentation.annotations.ApiIgnore;
 
+
+@ApiIgnore
 @RestController
 public class CustomErrorController implements ErrorController {
 

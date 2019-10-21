@@ -10,23 +10,30 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 public class Comment implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	@ApiModelProperty(example = "1", required = true, position = 1)
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@ApiModelProperty(example = "Iniciando a leitura.", required = true, position = 2)
 	private String content;
 	
+	@ApiModelProperty(required = true, position = 3)
 	private OffsetDateTime timestamp;
 	
 	@ManyToOne
 	@JsonIgnoreProperties("comments")
 	@JoinColumn(name = "book_reading_id")
+	@JsonIgnore
 	private BookReading bookReading;
 	
 	public Comment() {}
