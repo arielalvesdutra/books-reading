@@ -1,6 +1,7 @@
 package dev.arielalvesdutra.booksreadings.entities;
 
 import java.io.Serializable;
+import java.security.InvalidParameterException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,6 +23,8 @@ import io.swagger.annotations.ApiModelProperty;
 @Entity
 public class Author implements Serializable, Cloneable {
 	
+	private final String emailPattern = ".+@.+\\.[a-z]+";
+	
 	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty(example = "1" ,position = 1)
@@ -34,7 +37,7 @@ public class Author implements Serializable, Cloneable {
 	
 	@ApiModelProperty(example = "email@exemplo.com" ,position = 3)
 	@NotBlank
-	@Pattern(regexp = ".+@.+\\.[a-z]+")
+	@Pattern(regexp = emailPattern)
 	private String email;
 	
 	@JsonIgnoreProperties("authors")
@@ -72,8 +75,14 @@ public class Author implements Serializable, Cloneable {
 		return email;
 	}
 
+	
 	public void setEmail(String email) {
-		this.email = email;
+		if (email.matches(this.emailPattern)) {
+			this.email = email;
+			return;
+		}
+		
+		throw new InvalidParameterException("Email inválido.");
 	}
 
 	public Set<Book> getBooks() {
