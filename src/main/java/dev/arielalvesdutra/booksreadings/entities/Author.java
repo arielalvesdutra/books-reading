@@ -23,7 +23,7 @@ import io.swagger.annotations.ApiModelProperty;
 @Entity
 public class Author implements Serializable, Cloneable {
 	
-	private final String emailPattern = ".+@.+\\.[a-z]+";
+	private static final String emailPattern = ".+@.+\\.[a-z]+";
 	
 	private static final long serialVersionUID = 1L;
 
@@ -77,7 +77,7 @@ public class Author implements Serializable, Cloneable {
 
 	
 	public void setEmail(String email) {
-		if (email.matches(this.emailPattern)) {
+		if (email.matches(Author.emailPattern)) {
 			this.email = email;
 			return;
 		}
