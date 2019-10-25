@@ -5,6 +5,7 @@ import java.net.URI;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -31,6 +32,10 @@ public class AuthorController {
 	
 	@Autowired
 	private AuthorService authorService;
+	
+	public AuthorController(@Lazy AuthorService authorService) {
+		 this.authorService = authorService;
+	}
 	
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<RetrieveAuthorDTO> create(

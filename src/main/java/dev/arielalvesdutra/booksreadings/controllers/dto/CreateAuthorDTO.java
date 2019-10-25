@@ -9,7 +9,7 @@ import dev.arielalvesdutra.booksreadings.entities.Author;
 import io.swagger.annotations.ApiModelProperty;
 
 
-public class CreateAuthorDTO {
+public class CreateAuthorDTO implements Cloneable {
 	
 	@ApiModelProperty(example = "Martin Fowler", required = true, position = 1)
 	@NotEmpty
@@ -50,5 +50,10 @@ public class CreateAuthorDTO {
 		Author author = new Author(this.name, this.email);
 		
 		return author;	
+	}
+	
+	@Override
+	public CreateAuthorDTO clone() throws CloneNotSupportedException {
+		return (CreateAuthorDTO) super.clone();
 	}
 }
