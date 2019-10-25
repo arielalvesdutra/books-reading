@@ -62,15 +62,24 @@ public class AuthorControllerTest {
 	@MockBean
 	private AuthenticationService authService;
 	
+	private User fakeUser = new UserBuilder()
+			.withEmail("email@email.com")
+			.withPassword("password")
+			.withName("Dennis")
+			.withId(1L)
+			.build();
+	
 	@Test
 	public void listAuthors_shouldWork() throws Exception {
 		Pageable pageable = PageRequest.of(0, 10, Sort.by("name"));
 		List<Author> authorList = new ArrayList<Author>();
+		
 		Author author = new AuthorBuilder()
 				.withName("Ken Thompson")
 				.withEmail("ken@thompson.com")
 				.withId(1L)
 				.build();
+		
 		authorList.add(author);
 		Page<Author> authorPage = new PageImpl<Author>(authorList);
 		given(this.authorService.findAll(null, pageable)).willReturn(authorPage);	
@@ -87,12 +96,8 @@ public class AuthorControllerTest {
 	
 	@Test
 	public void getAuthorById_withValidToken_shouldWork() throws Exception {
-		User fakeUser = new UserBuilder()
-				.withEmail("email@email.com")
-				.withPassword("password")
-				.withName("Dennis")
-				.withId(1L)
-				.build();
+		
+		String token = this.prepareFakeUserVerificationAndGenerateToken();
 		
 		Author author = new AuthorBuilder()
 				.withName("Ken Thompson")
@@ -100,11 +105,7 @@ public class AuthorControllerTest {
 				.withId(1L)
 				.build();
 		
-		given(this.userRepository.findById(ArgumentMatchers.anyLong()))
-				.willReturn(Optional.of(fakeUser));
 		given(this.authorService.find(1L)).willReturn(author);
-
-		String token = this.tokenService.generateToken(fakeUser);
 	
 		
 		mockMvc.perform(MockMvcRequestBuilders
@@ -125,19 +126,14 @@ public class AuthorControllerTest {
 	
 	@Test
 	public void getAuthorById_withoutAuthor_shouldReturn404() throws Exception {
-		User fakeUser = new UserBuilder()
-				.withEmail("email@email.com")
-				.withPassword("password")
-				.withName("Dennis")
-				.withId(1L)
-				.build();
-		given(this.userRepository.findById(ArgumentMatchers.anyLong()))
-				.willReturn(Optional.of(fakeUser));
-		given(this.authorService.find(1L)).willThrow(new EntityNotFoundException(""));
-		String token = this.tokenService.generateToken(fakeUser);
+
+		String token = this.prepareFakeUserVerificationAndGenerateToken();
+		
+		given(this.authorService.find(1L))
+				.willThrow(new EntityNotFoundException("Author não encontrado"));
 		
 		
-		mockMvc.perform(MockMvcRequestBuilders
+		mockMvc.perform(MockMvcRequestBuilders		
 				.get("/authors/1")
 				.header("Authorization", "Bearer "+ token))
 				.andExpect(status().isNotFound());
@@ -145,26 +141,22 @@ public class AuthorControllerTest {
 	
 	@Test
 	public void createAuthor_shouldWork() throws Exception {
-		User fakeUser = new UserBuilder()
-				.withEmail("email@email.com")
-				.withPassword("password")
-				.withName("Dennis")
-				.withId(1L)
-				.build();
+		
+		String token = this.prepareFakeUserVerificationAndGenerateToken();
 		
 		CreateAuthorDTO createAuthorDTO = new CreateAuthorDTOBuilder()
 				.withName("Ken Thompson")
 				.withEmail("ken@thompson.com")
 				.build();
 		
-		Author createdAuthor = createAuthorDTO.toAuthor();
-		createdAuthor.setId(1L);
+		Author createdAuthor = new AuthorBuilder()
+				.withName(createAuthorDTO.getName())
+				.withEmail(createAuthorDTO.getEmail())
+				.withId(1L)
+				.build();
 		
-		given(this.userRepository.findById(ArgumentMatchers.anyLong()))
-				.willReturn(Optional.of(fakeUser));
 		given(this.authorService.create(createAuthorDTO.toAuthor()))
 				.willReturn(createdAuthor);
-		String token = this.tokenService.generateToken(fakeUser);
 		
 		
 		mockMvc.perform(MockMvcRequestBuilders
@@ -181,24 +173,19 @@ public class AuthorControllerTest {
 	
 	@Test
 	public void updateAuthor_shouldWork() throws Exception {
-		User fakeUser = new UserBuilder()
-				.withEmail("email@email.com")
-				.withPassword("password")
-				.withName("Dennis")
-				.withId(1L)
-				.build();
 		
-		given(this.userRepository.findById(ArgumentMatchers.anyLong()))
-				.willReturn(Optional.of(fakeUser));
-		String token = this.tokenService.generateToken(fakeUser);
+		String token = this.prepareFakeUserVerificationAndGenerateToken();
 		
 		UpdateAuthorDTO updateAuthorDto = new UpdateAuthorDTOBuilder()
 				.withName("Ken Thomp.")
 				.withEmail("ken@thomp.com")
 				.build();
 		
-		Author updatedAuthor = updateAuthorDto.toAuthor();
-		updatedAuthor.setId(1L);
+		Author updatedAuthor = new AuthorBuilder()
+				.withName(updateAuthorDto.getName())
+				.withEmail(updateAuthorDto.getEmail())
+				.withId(1L)
+				.build();
 		
 		given(this.authorService.update(1L, updateAuthorDto.toAuthor()))
 				.willReturn(updatedAuthor);
@@ -215,21 +202,23 @@ public class AuthorControllerTest {
 	
 	@Test
 	public void deleteAuthor_shouldWork() throws Exception {
-		User fakeUser = new UserBuilder()
-				.withEmail("email@email.com")
-				.withPassword("password")
-				.withName("Dennis")
-				.withId(1L)
-				.build();
 		
-		given(this.userRepository.findById(ArgumentMatchers.anyLong()))
-				.willReturn(Optional.of(fakeUser));
-		String token = this.tokenService.generateToken(fakeUser);
+		String token = this.prepareFakeUserVerificationAndGenerateToken();
 		
 		
 		mockMvc.perform(MockMvcRequestBuilders
 				.delete("/authors/1")
 				.header("Authorization", "Bearer "+ token))
 				.andExpect(status().isOk());
+	}
+	
+	private String prepareFakeUserVerificationAndGenerateToken() {
+		
+		given(this.userRepository.findById(ArgumentMatchers.anyLong()))
+				.willReturn(Optional.of(fakeUser));
+		
+		String token = this.tokenService.generateToken(fakeUser);
+		
+		return token;		
 	}
 }
