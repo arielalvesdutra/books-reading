@@ -20,16 +20,23 @@ public class TokenService {
 	public String generateToken(Authentication authentication) {
 		
 		User loggedUser =  (User) authentication.getPrincipal();
+		
+		return this.generateToken(loggedUser);
+	}
+	
+	public String generateToken(User user) {
+		
 		Date today = new Date();
 		Date expirationDate = new Date(today.getTime() + this.expiration);
 		
 		return Jwts.builder()
 			.setIssuer("API de Livros e Autores")
-			.setSubject(loggedUser.getId().toString())
+			.setSubject(user.getId().toString())
 			.setIssuedAt(today)
 			.setExpiration(expirationDate)
 			.signWith(SignatureAlgorithm.HS256, secret)
 			.compact();
+		
 	}
 	
 	public boolean isValidToken(String token) {

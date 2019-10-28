@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
@@ -21,10 +22,15 @@ import dev.arielalvesdutra.booksreadings.repositories.BookRepository;
 public class BookService {
 	
 	@Autowired
-	private AuthorService authorService;
+	private final AuthorService authorService;
 
 	@Autowired
-	private BookRepository bookRepository;	
+	private final BookRepository bookRepository;
+	
+	public BookService(@Lazy AuthorService authorService, @Lazy BookRepository bookRepository) {
+		this.authorService = authorService;
+		this.bookRepository = bookRepository;
+	}	
 	
 	public Book create(Book book) {
 		

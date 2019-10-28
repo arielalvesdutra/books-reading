@@ -51,6 +51,14 @@ public class User implements UserDetails {
 	@OneToMany(mappedBy = "reader", cascade = CascadeType.ALL,  orphanRemoval = true)
 	private Set<BookReading> booksReadings = new HashSet<BookReading>();
 	
+	public User() {}
+	
+	public User(String name, String email, String password) {
+		this.setName(name);
+		this.setEmail(email);
+		this.setPassword(password);
+	}
+
 	public Set<BookReading> getBooksReadings() {
 		return this.booksReadings;
 	}
