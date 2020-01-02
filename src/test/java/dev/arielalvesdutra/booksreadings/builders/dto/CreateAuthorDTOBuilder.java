@@ -1,4 +1,4 @@
-package dev.arielalvesdutra.booksreadings.unit.entities;
+package dev.arielalvesdutra.booksreadings.builders.dto;
 
 import dev.arielalvesdutra.booksreadings.controllers.dto.CreateAuthorDTO;
 

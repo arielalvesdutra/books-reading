@@ -1,4 +1,4 @@
-package dev.arielalvesdutra.booksreadings.unit.entities;
+package dev.arielalvesdutra.booksreadings.builders;
 
 import dev.arielalvesdutra.booksreadings.entities.Book;
 

@@ -1,4 +1,4 @@
-package dev.arielalvesdutra.booksreadings.unit.controllers;
+package dev.arielalvesdutra.booksreadings.converters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
