@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import dev.arielalvesdutra.booksreadings.builders.AuthorBuilder;
+import dev.arielalvesdutra.booksreadings.builders.BookBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,8 +27,6 @@ import dev.arielalvesdutra.booksreadings.exceptions.EntityNotFoundException;
 import dev.arielalvesdutra.booksreadings.repositories.AuthorRepository;
 import dev.arielalvesdutra.booksreadings.services.AuthorService;
 import dev.arielalvesdutra.booksreadings.services.BookService;
-import dev.arielalvesdutra.booksreadings.unit.entities.AuthorBuilder;
-import dev.arielalvesdutra.booksreadings.unit.entities.BookBuilder;
 
 
 @RunWith(MockitoJUnitRunner.class)

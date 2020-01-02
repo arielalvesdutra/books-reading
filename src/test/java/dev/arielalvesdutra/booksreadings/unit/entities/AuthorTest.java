@@ -6,6 +6,7 @@ import java.security.InvalidParameterException;
 import java.util.HashSet;
 import java.util.Set;
 
+import dev.arielalvesdutra.booksreadings.builders.BookBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;

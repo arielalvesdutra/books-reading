@@ -1,4 +1,4 @@
-package dev.arielalvesdutra.booksreadings.unit.entities;
+package dev.arielalvesdutra.booksreadings.builders;
 
 import java.util.HashSet;
 import java.util.Set;

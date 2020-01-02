@@ -1,32 +1,9 @@
 package dev.arielalvesdutra.booksreadings.unit.controllers;
 
-import static dev.arielalvesdutra.booksreadings.unit.controllers.ObjectToJsonString.asJsonString;
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
+import dev.arielalvesdutra.booksreadings.builders.AuthorBuilder;
+import dev.arielalvesdutra.booksreadings.builders.UserBuilder;
+import dev.arielalvesdutra.booksreadings.builders.dto.CreateAuthorDTOBuilder;
+import dev.arielalvesdutra.booksreadings.builders.dto.UpdateAuthorDTOBuilder;
 import dev.arielalvesdutra.booksreadings.controllers.AuthorController;
 import dev.arielalvesdutra.booksreadings.controllers.dto.CreateAuthorDTO;
 import dev.arielalvesdutra.booksreadings.controllers.dto.UpdateAuthorDTO;
@@ -37,10 +14,28 @@ import dev.arielalvesdutra.booksreadings.repositories.UserRepository;
 import dev.arielalvesdutra.booksreadings.services.AuthenticationService;
 import dev.arielalvesdutra.booksreadings.services.AuthorService;
 import dev.arielalvesdutra.booksreadings.services.TokenService;
-import dev.arielalvesdutra.booksreadings.unit.entities.AuthorBuilder;
-import dev.arielalvesdutra.booksreadings.unit.entities.CreateAuthorDTOBuilder;
-import dev.arielalvesdutra.booksreadings.unit.entities.UpdateAuthorDTOBuilder;
-import dev.arielalvesdutra.booksreadings.unit.entities.UserBuilder;;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.data.domain.*;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static dev.arielalvesdutra.booksreadings.converters.ObjectToJsonString.asJsonString;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
 @RunWith(SpringRunner.class)
