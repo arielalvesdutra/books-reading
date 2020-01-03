@@ -33,9 +33,6 @@ public class BookReading implements Serializable {
 	@JsonIgnore
 	private Book book;
 
-	@JsonIgnoreProperties({ "booksReadings", "password", "profiles",
-		"authorities", "accountNonExpired", "accountNonLocked", "credentialsNonExpired",
-		"username", "enabled"})
 	@JoinColumn(name = "reader_id")
 	@ManyToOne
 	@JsonIgnore
@@ -45,7 +42,6 @@ public class BookReading implements Serializable {
 	private ReadingStatus readingStatus = ReadingStatus.RESERVED;
 	
 	@OneToMany(mappedBy = "bookReading", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonIgnoreProperties("bookReading")
 	@JsonIgnore
 	private List<Comment> comments = new ArrayList<Comment>();
 

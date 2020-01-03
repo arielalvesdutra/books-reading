@@ -39,10 +39,9 @@ public class Book implements Serializable, Cloneable {
 	private Integer publicationYear;
 	
 	@ManyToMany
-	@JsonIgnoreProperties("books")
 	@JoinTable(name="author_book",
-	 joinColumns = @JoinColumn(name="author_id", referencedColumnName= "id"),
-	 inverseJoinColumns = @JoinColumn(name="book_id", referencedColumnName = "id"))
+	 joinColumns = @JoinColumn(name="book_id", referencedColumnName= "id"),
+	 inverseJoinColumns = @JoinColumn(name="author_id", referencedColumnName = "id"))
 	@JsonIgnore
 	private Set<Author> authors = new HashSet<Author>();
 
