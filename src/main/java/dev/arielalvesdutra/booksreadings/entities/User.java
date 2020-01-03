@@ -46,7 +46,6 @@ public class User implements UserDetails {
 	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Profile> profiles = new ArrayList<Profile>();
 
-	@JsonIgnoreProperties("reader")
 	@JsonIgnore
 	@OneToMany(mappedBy = "reader", cascade = CascadeType.ALL,  orphanRemoval = true)
 	private Set<BookReading> booksReadings = new HashSet<BookReading>();

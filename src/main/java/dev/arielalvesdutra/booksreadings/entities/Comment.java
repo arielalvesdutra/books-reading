@@ -31,7 +31,6 @@ public class Comment implements Serializable {
 	private OffsetDateTime timestamp;
 	
 	@ManyToOne
-	@JsonIgnoreProperties("comments")
 	@JoinColumn(name = "book_reading_id")
 	@JsonIgnore
 	private BookReading bookReading;

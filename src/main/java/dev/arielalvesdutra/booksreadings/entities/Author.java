@@ -39,13 +39,12 @@ public class Author implements Serializable, Cloneable {
 	@NotBlank
 	@Pattern(regexp = emailPattern)
 	private String email;
-	
-	@JsonIgnoreProperties("authors")
+
 	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name="author_book",
-	 inverseJoinColumns = @JoinColumn(name="author_id", referencedColumnName= "id"),
-	 joinColumns = @JoinColumn(name="book_id", referencedColumnName = "id"))
+	 inverseJoinColumns = @JoinColumn(name="book_id", referencedColumnName= "id"),
+	 joinColumns = @JoinColumn(name="author_id", referencedColumnName = "id"))
 	private Set<Book> books = new HashSet<Book>();	
 
 	public Author() {}
